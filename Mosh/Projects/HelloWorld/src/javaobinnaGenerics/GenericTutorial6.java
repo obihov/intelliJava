@@ -16,11 +16,23 @@ package javaobinnaGenerics;
  *
  * See printStaffList method. If this method expected an instance of GenericStaffList<UniversityStaff>
  * You cannot supply an instance of GenericStaffList<Instructor>.
- * Because GenericStaffList<Instructor> is not child of GenericStaffList<UniversityStaff>
+ * Because GenericStaffList<Instructor> is not a child of GenericStaffList<UniversityStaff>
  *
- * If printStaffList method expected an instance of UniversityStaff,
- * then you can supply an instance of Instructor.
- * And you can also assign an instance of Instructor to a variable of type UniversityStaff
+ * Note:
+ * As a workaround.
+ * If printStaffList expected an instance of GenericStaffList<UniversityStaff>
+ * And knowing that UniversityStaff is a parent of Instructor, what you can do is
+ * Create one or more instances of Instructor.
+ * Instructor instructor1 = new Instructor("pete")
+ * Then do this:
+ * GenericListStaffList<UniversityStaff> universityStaff = new GenericListStaffList<UniversityStaff>
+ * universityStaff.add(new Instructor("pete"))
+ * universityStaff.add(new UniversityStaff("matt"))
+ * Above is possible because the add method resolves the 'T' parameter as UniversityStaff or its children.
+ * Now you can:
+ * printStaffList(universityStaff)
+ *
+ * There is a better way using WildCards. Check out next tutorial - GenericTutorial7
  */
 
 public class GenericTutorial6 {
@@ -28,17 +40,28 @@ public class GenericTutorial6 {
         UniversityStaff staff1 = new Instructor("John");
         System.out.println(staff1.toString());
 
-        GenericStaffList<Instructor> staffs = new GenericStaffList<>(2);
-        staffs.add(new Instructor("John"));
-        staffs.add(new Instructor("Peter"));
-        staffs.add(new Instructor("Obi"));
-        staffs.add(new Instructor("Max"));
+        System.out.println("==============================");
+        GenericStaffList<UniversityStaff> uniStaff = new GenericStaffList<>(2);
+        uniStaff.add(new UniversityStaff("Jacob"));
+        uniStaff.add(new UniversityStaff("Mosh"));
+        printStaffList(uniStaff);
 
-        printStaffList(staffs);
-
+        System.out.println("==============================");
+        GenericStaffList<Instructor> instructorStaff = new GenericStaffList<>(2);
+        instructorStaff.add(new Instructor("John"));
+        instructorStaff.add(new Instructor("Peter"));
+        //printStaffList(instructorStaff);
+        //will not accept an instance of GenericStaffList<Instructor> for GenericStaffList<UniversityStaff>
+        //GenericStaffList<Instructor> is not child of GenericStaffList<UniversityStaff>
+        //Even though Instructor is child of UniversityStaff
+        //See workaround below:
+        GenericStaffList<UniversityStaff> uniStaff2 = new GenericStaffList<>(2);
+        uniStaff2.add(new Instructor("John"));
+        uniStaff2.add(new Instructor("Peter"));
+        printStaffList(uniStaff2);
     }
 
-    public static void printStaffList(GenericStaffList<Instructor> staffs) {
+    public static void printStaffList(GenericStaffList<UniversityStaff> staffs) {
         for (int i = 0; i < staffs.getLength(); i++) {
             System.out.println("Staff: " + staffs.get(i));
         }
