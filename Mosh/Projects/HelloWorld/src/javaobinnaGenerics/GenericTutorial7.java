@@ -3,36 +3,19 @@ package javaobinnaGenerics;
 
 /**
  * Generics inheritance example.
- *
- *
- * So UniversityStaff is Parent and Instructor is child.
- * UniversityStaff staff = new Instructor() is possible through OOP.
- * However,
- * GenericStaffList<Instructor> is not a child of GenericStaffList<UniversityStaff>
- * For this reason, you cannot do
- * GenericStaffList<UniversityStaff> staff = new GenericStaffList<Instructor>()
- * And you cannot substitute a parameter expecting an instance of GenericStaffList<UniversityStaff>
- * with an instance of GenericStaffList<Instructor> for the same reason stated above.
- *
- * See printStaffList method. If this method expected an instance of GenericStaffList<UniversityStaff>
- * You cannot supply an instance of GenericStaffList<Instructor>.
- * Because GenericStaffList<Instructor> is not a child of GenericStaffList<UniversityStaff>
- *
+ * Generics Wildcard to facilitate switching of Generic<T> where T can be anything. Or
+ * Generics Wildcard to facilitate switching of Generic<T extends Type> where T can be Type or its Children.
+ * See method: printStaffList(WildCardGenericStaffList<?> staffs)
  * Note:
- * As a workaround.
- * If printStaffList expected an instance of GenericStaffList<UniversityStaff>
- * And knowing that UniversityStaff is a parent of Instructor, what you can do is
- * Create one or more instances of Instructor.
- * Instructor instructor1 = new Instructor("pete")
- * Then do this:
- * GenericListStaffList<UniversityStaff> universityStaff = new GenericListStaffList<UniversityStaff>
- * universityStaff.add(new Instructor("pete"))
- * universityStaff.add(new UniversityStaff("matt"))
- * Above is possible because the add method resolves the 'T' parameter as UniversityStaff or its children.
- * Now you can:
- * printStaffList(universityStaff)
+ * WildCardGenericStaffList<?> must adhere to the WildCardGenericStaffList class definition (see below).
+ * WildCardGenericStaffList<T extends WildCardUniversityStaff>
+ * Meaning, '?' says T can be WildCardUniversityStaff or its children - WildCardInstructor.
+ * Therefore:
+ * printStaffList(new WildCardGenericStaffList<WildCardUniversityStaff>(2)) or
+ * printStaffList(new WildCardGenericStaffList<WildCardInstructor>(2))
  *
- * There is a better way using WildCards. Check out next tutorial - GenericTutorial7
+ * Without Wildcards '?' you will be restricted with whatever the expected parameter type of the printStaffList method is.
+ * See GenericTutorial6 to understand such drawbacks to this restriction when not using wildcards.
  */
 
 public class GenericTutorial7 {
@@ -40,17 +23,26 @@ public class GenericTutorial7 {
         UniversityStaff staff1 = new Instructor("John");
         System.out.println(staff1.toString());
 
-        WildCardGenericStaffList<WildCardInstructor> staffs = new WildCardGenericStaffList<>(2);
-        staffs.add(new WildCardInstructor("John"));
-        staffs.add(new WildCardInstructor("Peter"));
-        staffs.add(new WildCardInstructor("Obi"));
-        staffs.add(new WildCardInstructor("Max"));
+        System.out.println("==============================");
+        WildCardGenericStaffList<WildCardInstructor> instructorStaff = new WildCardGenericStaffList<>(2);
+        instructorStaff.add(new WildCardInstructor("John"));
+        instructorStaff.add(new WildCardInstructor("Peter"));
+        printStaffList(instructorStaff);
 
-        printStaffList(staffs);
-
+        System.out.println("==============================");
+        //Using wildcard '?' in the printStaffList method, I am able to supply either an instance of
+        //WildCardGenericStaffList<WildCardInstructor> or
+        //WildCardGenericStaffList<WildCardUniversityStaff>
+        //for WildCardGenericStaffList<?>
+        //Note: ? must be match definition of class: WildCardGenericStaffList<T extends WildCardUniversityStaff>
+        //Meaning you cannot use Person, House for '?' but only instances of WildCardUniversityStaff and its child classes.
+        WildCardGenericStaffList<WildCardUniversityStaff> universityStaff = new WildCardGenericStaffList<>(2);
+        universityStaff.add(new WildCardUniversityStaff("Jacob"));
+        universityStaff.add(new WildCardInstructor("Mosh"));
+        printStaffList(universityStaff);
     }
 
-    public static void printStaffList(WildCardGenericStaffList<WildCardInstructor> staffs) {
+    public static void printStaffList(WildCardGenericStaffList<?> staffs) {
         for (int i = 0; i < staffs.getLength(); i++) {
             System.out.println("Staff: " + staffs.get(i));
         }

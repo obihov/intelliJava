@@ -40,17 +40,28 @@ public class GenericTutorial6 {
         UniversityStaff staff1 = new Instructor("John");
         System.out.println(staff1.toString());
 
-        GenericStaffList<Instructor> staffs = new GenericStaffList<>(2);
-        staffs.add(new Instructor("John"));
-        staffs.add(new Instructor("Peter"));
-        staffs.add(new Instructor("Obi"));
-        staffs.add(new Instructor("Max"));
+        System.out.println("==============================");
+        GenericStaffList<UniversityStaff> uniStaff = new GenericStaffList<>(2);
+        uniStaff.add(new UniversityStaff("Jacob"));
+        uniStaff.add(new UniversityStaff("Mosh"));
+        printStaffList(uniStaff);
 
-        printStaffList(staffs);
-
+        System.out.println("==============================");
+        GenericStaffList<Instructor> instructorStaff = new GenericStaffList<>(2);
+        instructorStaff.add(new Instructor("John"));
+        instructorStaff.add(new Instructor("Peter"));
+        //printStaffList(instructorStaff);
+        //will not accept an instance of GenericStaffList<Instructor> for GenericStaffList<UniversityStaff>
+        //GenericStaffList<Instructor> is not child of GenericStaffList<UniversityStaff>
+        //Even though Instructor is child of UniversityStaff
+        //See workaround below:
+        GenericStaffList<UniversityStaff> uniStaff2 = new GenericStaffList<>(2);
+        uniStaff2.add(new Instructor("John"));
+        uniStaff2.add(new Instructor("Peter"));
+        printStaffList(uniStaff2);
     }
 
-    public static void printStaffList(GenericStaffList<Instructor> staffs) {
+    public static void printStaffList(GenericStaffList<UniversityStaff> staffs) {
         for (int i = 0; i < staffs.getLength(); i++) {
             System.out.println("Staff: " + staffs.get(i));
         }
