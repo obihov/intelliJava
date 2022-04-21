@@ -35,22 +35,22 @@ package javaobinnaGenerics;
  * There is a better way using WildCards. Check out next tutorial - GenericTutorial7
  */
 
-public class GenericTutorial6 {
+public class GenericTutorial7 {
     public static void main(String[] args) {
         UniversityStaff staff1 = new Instructor("John");
         System.out.println(staff1.toString());
 
-        GenericStaffList<Instructor> staffs = new GenericStaffList<>(2);
-        staffs.add(new Instructor("John"));
-        staffs.add(new Instructor("Peter"));
-        staffs.add(new Instructor("Obi"));
-        staffs.add(new Instructor("Max"));
+        WildCardGenericStaffList<WildCardInstructor> staffs = new WildCardGenericStaffList<>(2);
+        staffs.add(new WildCardInstructor("John"));
+        staffs.add(new WildCardInstructor("Peter"));
+        staffs.add(new WildCardInstructor("Obi"));
+        staffs.add(new WildCardInstructor("Max"));
 
         printStaffList(staffs);
 
     }
 
-    public static void printStaffList(GenericStaffList<Instructor> staffs) {
+    public static void printStaffList(WildCardGenericStaffList<WildCardInstructor> staffs) {
         for (int i = 0; i < staffs.getLength(); i++) {
             System.out.println("Staff: " + staffs.get(i));
         }
@@ -58,12 +58,12 @@ public class GenericTutorial6 {
 
 }
 
-class GenericStaffList<T extends UniversityStaff> {
+class WildCardGenericStaffList<T extends WildCardUniversityStaff> {
     private T[] staffs;
     private int counter = 0;
 
-    public GenericStaffList(int capacity) {
-        this.staffs = (T[]) new UniversityStaff[capacity];
+    public WildCardGenericStaffList(int capacity) {
+        this.staffs = (T[]) new WildCardUniversityStaff[capacity];
     }
 
     public void add(T staff) {
@@ -83,10 +83,10 @@ class GenericStaffList<T extends UniversityStaff> {
 }
 
 
-class UniversityStaff {
+class WildCardUniversityStaff {
     private String name;
 
-    public UniversityStaff(String name) {
+    public WildCardUniversityStaff(String name) {
         this.name = name;
     }
 
@@ -96,11 +96,11 @@ class UniversityStaff {
     }
 }
 
-class Instructor extends UniversityStaff {
+class WildCardInstructor extends WildCardUniversityStaff {
 
     private String name;
 
-    public Instructor(String name) {
+    public WildCardInstructor(String name) {
         super(name);
     }
 }
