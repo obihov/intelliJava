@@ -34,10 +34,6 @@ public class GenericTutorial6 {
         staffs.add(new Instructor("Obi"));
         staffs.add(new Instructor("Max"));
 
-        /*for (int i = 0; i < staffs.getLength(); i++) {
-            System.out.println("Staff: " + staffs.get(i));
-        }*/
-
         printStaffList(staffs);
 
     }
