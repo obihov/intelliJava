@@ -1,98 +1,71 @@
 package javaobinnaGenerics;
 
 
-/**
- * Generics inheritance example.
- * Generics Wildcard to facilitate switching of Generic<T> where T can be anything. Or
- * Generics Wildcard to facilitate switching of Generic<T extends Type> where T can be Type or its Children.
- * See method: printStaffList(WildCardGenericStaffList<?> staffs)
- * Note:
- * WildCardGenericStaffList<?> must adhere to the WildCardGenericStaffList class definition (see below).
- * WildCardGenericStaffList<T extends WildCardUniversityStaff>
- * Meaning, '?' says T can be WildCardUniversityStaff or its children - WildCardInstructor.
- * Therefore:
- * printStaffList(new WildCardGenericStaffList<WildCardUniversityStaff>(2)) or
- * printStaffList(new WildCardGenericStaffList<WildCardInstructor>(2))
- *
- * Without Wildcards '?' you will be restricted with whatever the expected parameter type of the printStaffList method is.
- * See GenericTutorial6 to understand such drawbacks to this restriction when not using wildcards.
- */
-
 public class GenericTutorial7 {
+
+
     public static void main(String[] args) {
-        UniversityStaff staff1 = new Instructor("John");
-        System.out.println(staff1.toString());
 
-        System.out.println("==============================");
-        WildCardGenericStaffList<WildCardInstructor> instructorStaff = new WildCardGenericStaffList<>(2);
-        instructorStaff.add(new WildCardInstructor("John"));
-        instructorStaff.add(new WildCardInstructor("Peter"));
-        printStaffList(instructorStaff);
-
-        System.out.println("==============================");
-        //Using wildcard '?' in the printStaffList method, I am able to supply either an instance of
-        //WildCardGenericStaffList<WildCardInstructor> or
-        //WildCardGenericStaffList<WildCardUniversityStaff>
-        //for WildCardGenericStaffList<?>
-        //Note: ? must be match definition of class: WildCardGenericStaffList<T extends WildCardUniversityStaff>
-        //Meaning you cannot use Person, House for '?' but only instances of WildCardUniversityStaff and its child classes.
-        WildCardGenericStaffList<WildCardUniversityStaff> universityStaff = new WildCardGenericStaffList<>(2);
-        universityStaff.add(new WildCardUniversityStaff("Jacob"));
-        universityStaff.add(new WildCardInstructor("Mosh"));
-        printStaffList(universityStaff);
     }
 
-    public static void printStaffList(WildCardGenericStaffList<?> staffs) {
-        for (int i = 0; i < staffs.getLength(); i++) {
-            System.out.println("Staff: " + staffs.get(i));
-        }
+    /** PROBLEM AND REASON WHY A WILDCARD IS NEEDED WHEN WORKING WITH METHODS THAT USES GENERIC TYPES as ARGUMENT
+    In the parameter of these methods:  ObjectEx, StringEx, AnimalEx, OR CatEx
+    We had strictly specified what the expected argument type should be for each method parameter.
+    Therefore,
+    For ObjectEx method, we expect only new GenericItemList<Object>.
+    For StringEx method, we expect only GenericItemList<String>.
+
+    The issue with this approach is that if we cannot think of substituting any of these with a Child. So
+    We cannot supply new GenericItemList<Integer> in the ObjectEx method.
+
+    Please don't confuse this approach of defining method with approach used in defining generic methods.
+    1. static <T> void ObjectEx(GenericItemList<T> item) is not same as
+    2. static void ObjectEx(GenericItemList<Object> animalList)
+
+    (1) offers flexibility and is considered as a generic-level method,
+    T is determined based on the type you specify when you call the method,
+    Also keep in mind that how T is defined in the generic class itself GenericItemList<T>,
+    will determine what types (And their children) that you can use when calling the ObjectEx method.
+    ObjectEx(new GenericItemList<String>())
+
+    (2) is not flexible, it is simply a regular method that takes a Generic class as argument in its parameter.
+    In this situation, you must specify an exact argument as already expected by the method's parameter.
+    Treat this approach like when you have a method that expects int, you supply it an int value.
+    ObjectEx(new GenericItemList<Object>())
+
+    So the real question here is, what if we wanted a method that expects a GenericItemList<Monkey> as argument
+    Then we would have to add a MonkeyEx method that has a parameter of type GenericItemList<Monkey> like below:
+    public static void MonkeyEx(GenericItemList<Monkey> animalList) { }
+
+    This will pollute our source code in no time. This is where Wildcard is a hero.
+     1. With WildCards '<?>' we can derive flexibility in our method's parameter.
+     2. We can also use it for Generics inheritance situations (see extends and super examples)
+     */
+    public static void ObjectEx(GenericItemList<Object> animalList) { }
+    public static void StringEx(GenericItemList<String> animalList) { }
+    public static void AnimalEx(GenericItemList<Animal> animalList) { }
+    public static void CatEx(GenericItemList<Cat> animalList) { }
+
+    public static void WithoutUsingWildcard(){
+        ObjectEx(new GenericItemList<Object>());
+        StringEx(new GenericItemList<String>());
+        AnimalEx(new GenericItemList<Animal>());
+        CatEx(new GenericItemList<Cat>());
     }
+
 
 }
 
-class WildCardGenericStaffList<T extends WildCardUniversityStaff> {
-    private T[] staffs;
-    private int counter = 0;
+class GenericItemList<T> {
 
-    public WildCardGenericStaffList(int capacity) {
-        this.staffs = (T[]) new WildCardUniversityStaff[capacity];
-    }
+}
 
-    public void add(T staff) {
-        if(counter < staffs.length)
-            staffs[counter++] = staff;
-        else
-            System.out.println("Error: Unable to add " +staff.toString()+ ". Maximum entry reached.");
-    }
+class Animal {
 
-    public T get(int index) {
-        return staffs[index];
-    }
+}
 
-    public int getLength() {
-        return this.staffs.length;
-    }
+class Cat {
+
 }
 
 
-class WildCardUniversityStaff {
-    private String name;
-
-    public WildCardUniversityStaff(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return this.name;
-    }
-}
-
-class WildCardInstructor extends WildCardUniversityStaff {
-
-    private String name;
-
-    public WildCardInstructor(String name) {
-        super(name);
-    }
-}
