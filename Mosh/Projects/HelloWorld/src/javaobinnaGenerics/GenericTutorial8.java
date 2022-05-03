@@ -27,6 +27,8 @@ public class GenericTutorial8 {
         Example3();
 
         Example4();
+
+        Example5();
     }
 
 
@@ -46,29 +48,57 @@ public class GenericTutorial8 {
 
         WildcardParent parentObj = parent.t;
         WildCardChild childObj = child.t;
-        MethodExample(parentObj);
-        MethodExample(childObj);
+        MethodA(parentObj);
+        MethodA(childObj);
     }
 
     public static void Example3() {
-        MethodExample3(new WildcardGen<WildCardChild>());
-        MethodExample2(new WildcardGen<WildcardParent>());
+        MethodB(new WildcardGen<WildcardParent>());
+        MethodC(new WildcardGen<WildCardChild>());
 
         /*
         Below line of code will have compile-time error because even though WildCardChild is child of WildCardParent,
         the generic class itself "WildcardGen<WildCardChild>" is not child of WildcardGen<WildcardParent>.
 
-        MethodExample2(new WildcardGen<WildCardChild>());
+        MethodB(new WildcardGen<WildCardChild>());
          */
     }
 
     private static void Example4() {
+        int number = 10;
+        MethodD(number);
+
+        String stringObj = "hello world";
+        MethodD(stringObj);
+
+        WildcardGen<WildcardParent> parentWildcardGen = new WildcardGen<>();
+        MethodD(parentWildcardGen);
+
+        WildcardGen<WildCardChild> cardChildWildcardGen = new WildcardGen<>();
+        MethodD(cardChildWildcardGen);
     }
 
-    public static void MethodExample(WildcardParent parent) { }
+    private static void Example5(){
+        /*
+        Below will throw errors because the <T> in MethodE is restricted to accept only WildcardParent or its children.
+        MethodE("hello world");
+        MethodE(false);
+         */
 
-    public static void MethodExample2(WildcardGen<WildcardParent> genObj) { }
-    public static void MethodExample3(WildcardGen<WildCardChild> genObj) { }
+        WildcardGen<WildcardParent> parentWildcardGen = new WildcardGen<>();
+        MethodE(parentWildcardGen);
+
+        WildcardGen<WildCardChild> cardChildWildcardGen = new WildcardGen<>();
+        MethodE(cardChildWildcardGen);
+    }
+
+
+    private static void MethodA(WildcardParent parent) { }
+    private static void MethodB(WildcardGen<WildcardParent> genObj) { }
+    private static void MethodC(WildcardGen<WildCardChild> genObj) { }
+    private static <T> void MethodD(T genObj) { }   //<T> is not restricted so can take any argument type value for genObj (e.g. string, boolean, WildCardGen, WildcardParent etc.).
+    private static <T extends WildcardParent> void MethodE(WildcardGen<T> genObj) { } //<T extends WildcardParent>, meaning T is restricted to allow only argument for genObj that is WildcardParent or its children
+
 }
 
 class WildcardGen<T extends WildcardParent> {
@@ -80,8 +110,30 @@ class WildcardGen<T extends WildcardParent> {
 }
 
 class WildcardParent {
+    int[] items = new int[5];
+    int counter;
+
     void MethodParent() {
         System.out.println("Parent");
+    }
+
+    void Add(int value){
+        if(counter > items.length){
+            System.out.println("Cannot add any more item. Maximum set to " + items.length);
+        }
+
+        items[counter++] = value;
+        System.out.println("Value entered.");
+    }
+
+    int Get(int index){
+        var minimumIndex = 0;
+        var maximumIndex = items.length - 1;
+        if(index > items.length){
+            System.out.println("Specify an index between " +minimumIndex+ " and " +maximumIndex);
+        }
+
+        return items[index];
     }
 }
 
