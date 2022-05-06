@@ -1,5 +1,7 @@
 package javaobinnaGenerics;
 
+/** Using WildCards
+ */
 
 public class GenericTutorial7 {
 
@@ -8,51 +10,65 @@ public class GenericTutorial7 {
 
     }
 
-    /** PROBLEM AND REASON WHY A WILDCARD IS NEEDED WHEN WORKING WITH METHODS THAT USES GENERIC TYPES as ARGUMENT
-    In the parameter of these methods:  ObjectEx, StringEx, AnimalEx, OR CatEx
-    We had strictly specified what the expected argument type should be for each method parameter.
-    Therefore,
-    For ObjectEx method, we expect only new GenericItemList<Object>.
-    For StringEx method, we expect only GenericItemList<String>.
-
-    The issue with this approach is that if we cannot think of substituting any of these with a Child. So
-    We cannot supply new GenericItemList<Integer> in the ObjectEx method.
-
-    Please don't confuse this approach of defining method with approach used in defining generic methods.
-    1. static <T> void ObjectEx(GenericItemList<T> item) is not same as
-    2. static void ObjectEx(GenericItemList<Object> animalList)
-
-    (1) offers flexibility and is considered as a generic-level method,
-    T is determined based on the type you specify when you call the method,
-    Also keep in mind that how T is defined in the generic class itself GenericItemList<T>,
-    will determine what types (And their children) that you can use when calling the ObjectEx method.
-    ObjectEx(new GenericItemList<String>())
-
-    (2) is not flexible, it is simply a regular method that takes a Generic class as argument in its parameter.
-    In this situation, you must specify an exact argument as already expected by the method's parameter.
-    Treat this approach like when you have a method that expects int, you supply it an int value.
-    ObjectEx(new GenericItemList<Object>())
-
-    So the real question here is, what if we wanted a method that expects a GenericItemList<Monkey> as argument
-    Then we would have to add a MonkeyEx method that has a parameter of type GenericItemList<Monkey> like below:
-    public static void MonkeyEx(GenericItemList<Monkey> animalList) { }
-
-    This will pollute our source code in no time. This is where Wildcard is a hero.
-     1. With WildCards '<?>' we can derive flexibility in our method's parameter.
-     2. We can also use it for Generics inheritance situations (see extends and super examples)
+    /** GENERICS AS ARGUMENT IN METHOD PARAMETER - PROBLEM
+     *  Below examples make it possible to use generic arguments in method parameter.
+     *  However, you do not have much flexibility because you are required to provide exact match expected by argument.
+     *  For example, the ObjectEx method, expects argument of type GenericItemList<Object> AND that must be supplied as argument to the method's parameter.
+     *  If you wanted to supply a stringList argument to the ObjectEx method, that would not be possible AND
+     *  you must create another method to use a GenericItemList<String> argument type.
+     *  This can blow up your code, as new methods are created to handle the expected parameter type.
+     *  Using a WildCard will solve this issue.
      */
     public static void ObjectEx(GenericItemList<Object> objectList) { }
     public static void StringEx(GenericItemList<String> stringList) { }
     public static void AnimalEx(GenericItemList<Animal> animalList) { }
     public static void CatEx(GenericItemList<Cat> catList) { }
+    public static void NumberExWithRestriction(GenericItemListWithRestriction<Number> numberList) { }
 
-    public static void WithoutUsingWildcard(){
+    public static void WildcardNotUsed(){
         ObjectEx(new GenericItemList<Object>());
         StringEx(new GenericItemList<String>());
         AnimalEx(new GenericItemList<Animal>());
         CatEx(new GenericItemList<Cat>());
+        GenericTutorial7.NumberExWithRestriction(new GenericItemListWithRestriction<Number>());
+        //with restriction, you are limited to bounded type defined.
+        //If you wanted <Double>, then you should define another method using new GenericItemListWithRestriction<Double> as parameter
     }
 
+    /** GENERICS AS ARGUMENT IN METHOD PARAMETER - PROBLEM
+     * With a WildCard, you can make your Generic argument is flexible to accept other types.
+     * Note: Using WildCard in method parameter's is restricted to the type arguments mentioned in the Generic class definition.
+     * For example:
+     * (1) If a generic class is defined as below
+     * public class GenericItemList<T>, THEN a Generic-WildCard method like ObjectEx(GenericItemList<?> anyList) can accept a
+     * - new GenericItemList<String>, new GenericItemList<Object>, new GenericItemList<Number> etc.
+     * (2) If a generic class is defined with restriction as below
+     * public class GenericItemList<T extends Number>, THEN a Generic-WildCard method can only accept Number and its child classes as shown below.
+     * - new GenericItemList<Number>, new GenericItemList<Integer>, new GenericItemList<Float>, new GenericItemList<Double> etc.
+     */
+    public static void NumberExWildCard(GenericItemList<?> anyList) { }
+    public static void NumberExWithRestrictionWildCard(GenericItemListWithRestriction<?> anyList) { }
+
+    public static void WildcardIsUsed(){
+        // Also, because GenericItemList class was not restricted to any specific type, we are able to use WildCard to specify argument based off of any given type as shown below.
+        NumberExWildCard(new GenericItemList<Object>());
+        NumberExWildCard(new GenericItemList<String>());
+        NumberExWildCard(new GenericItemList<Integer>());
+        NumberExWildCard(new GenericItemList<Animal>());
+        NumberExWildCard(new GenericItemList<Cat>());
+
+        // When the definition of the generic class is restricted, then we must use the restricted type or its children when supplying argument for the method's parameter.
+        NumberExWithRestrictionWildCard(new GenericItemListWithRestriction<Number>());
+        NumberExWithRestrictionWildCard(new GenericItemListWithRestriction<Byte>());
+        NumberExWithRestrictionWildCard(new GenericItemListWithRestriction<Short>());
+        NumberExWithRestrictionWildCard(new GenericItemListWithRestriction<Integer>());
+        NumberExWithRestrictionWildCard(new GenericItemListWithRestriction<Long>());
+        NumberExWithRestrictionWildCard(new GenericItemListWithRestriction<Float>());
+        NumberExWithRestrictionWildCard(new GenericItemListWithRestriction<Double>());
+    }
+}
+
+class GenericItemListWithRestriction<T extends Number> {
 
 }
 
