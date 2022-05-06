@@ -41,10 +41,10 @@ public class GenericTutorial7 {
      1. With WildCards '<?>' we can derive flexibility in our method's parameter.
      2. We can also use it for Generics inheritance situations (see extends and super examples)
      */
-    public static void ObjectEx(GenericItemList<Object> animalList) { }
-    public static void StringEx(GenericItemList<String> animalList) { }
+    public static void ObjectEx(GenericItemList<Object> objectList) { }
+    public static void StringEx(GenericItemList<String> stringList) { }
     public static void AnimalEx(GenericItemList<Animal> animalList) { }
-    public static void CatEx(GenericItemList<Cat> animalList) { }
+    public static void CatEx(GenericItemList<Cat> catList) { }
 
     public static void WithoutUsingWildcard(){
         ObjectEx(new GenericItemList<Object>());
