@@ -12,7 +12,7 @@ public class GenericTutorial8 {
 
         System.out.println();
         System.out.println("Generic Wildcard using Super to Add item. Using extend to get item as Object.");
-        AddMoreItems(cart);
+        AddMoreItems(cart, new Egg("a003", 5));
         int recentItemIndex = cart.GetTotalItemsInCart() - 1;
         Object x = GetItem(cart, recentItemIndex);
         if (x instanceof Product) {
@@ -21,11 +21,22 @@ public class GenericTutorial8 {
         }
     }
 
-    static void AddMoreItems(Cart<? super Product> activeCart) {
-        activeCart.AddItemToCart(new Egg("a003", 5));
+    /**
+     * Take existing cart, and add new product-item to it.
+     * @param activeCart
+     * @param product
+     */
+    static void AddMoreItems(Cart<? super Product> activeCart, Product product) {
+        activeCart.AddItemToCart(product);
         System.out.println("New item was added.");
     }
 
+    /**
+     * Get an item from the existing cart using index.
+     * @param cart
+     * @param index
+     * @return
+     */
     static Object GetItem(Cart<? super Product> cart, int index) {
         Object x = cart.GetItemFromCart(index);
         return x;
