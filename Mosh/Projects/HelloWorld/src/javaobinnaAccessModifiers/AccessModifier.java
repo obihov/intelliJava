@@ -23,10 +23,7 @@ public class AccessModifier {
 
 
     //final modifier -
-    //This will create constant members.
-    //If you define a class as final, that class can't be extended.
-    //If you define a method as final, that method can't be overridden. An abstract method can't be final because abstract methods are designed to be overridden by its child class.
-    //If you define a field as final, that field is treated as a readonly (just as we have in C# readonly keyword). Can set the value after defining field or use a constructor.
+    //Like C#, will create readonly fields.
     final String Organization = "Oracle"; //readonly field set after it is defined.
     final String Owner;
     public AccessModifier(String owner) {
@@ -34,8 +31,7 @@ public class AccessModifier {
     }
 
     //Static final modifier -
-    //If you define a field as static final, then that field is treated as a constant (just as we have in C# const keyword). You must assign a value immediately after defining a constant field.
-    //Note: you cannot use a constructor to assign value to a static final (i.e. const) field.
+    //Like C#, will create const fields.
     private static final int SecondOwner = 387;
 
     //abstract - learn more below
