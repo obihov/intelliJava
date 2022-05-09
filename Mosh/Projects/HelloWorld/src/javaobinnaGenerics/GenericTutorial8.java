@@ -1,23 +1,5 @@
 package javaobinnaGenerics;
 
-/** TUTORIAL - Generic Super and Extends for method parameter.
- * The extends or super keyword can be used to get item from the cart.
- *
- * We suggest using the super keyword for adding items.
- * The super keyword for method parameter, creates a maximum class type that is allowed for defining the <? super ...> as method parameter.
- * You cannot go higher than the restricted typed defined in the generic class.
- * So if class is defined as <T extends Product>, then <? super ...> will only accept Product or its children for '...' argument
- *
- * Also, we suggest using the extends keyword for getting items.
- * The extends keyword for method parameter does not mandate a maximum class type.
- * You can go higher or lower than the restricted type defined in the generic class.
- * So  if class is defined as <T extends Product>, then <? extends ...> will accept Object, Product or its children (i.e. Egg, Pencil) for '...' argument.
- *
- * One last thing,
- * If a generic class is defined with restriction, then you cannot plug in any type other than the restricted type and its children.
- * So if class is defined as <T extends Product>, then <? super Number>, <? super String>, <? extends Exception>, <? extends Boolean> will not work.
- */
-
 public class GenericTutorial8 {
     public static void main(String[] args) {
 
@@ -31,16 +13,12 @@ public class GenericTutorial8 {
         Cart<Product> cart = new Cart<>(3);
 
         //Add products to the cart. Method parameter uses the super keyword.
-        //If restricted generic class, then you can call method using type specified after super keyword or its parent (Object not accepted).
-        //If non-restricted generic class, then you can call method using type specified after super keyword or its parent (Object is accepted).
-        //For super - call with exact type specified after the super keyword or any of its parent.
         AddMoreItems(cart, egg1);
         AddMoreItems(cart, egg2);
         AddMoreItems(cart, pencil1);
         AddMoreItems(cart, pencil2); //if this product isn't added, then check capacity of Cart set on line8
 
         //Get a product from cart by its index. Method parameter uses the extends keyword.
-        //For extends - call method with exact type specified after extends keyword or any of its children.
         int recentItemIndex = cart.GetTotalItemsInCart() - 1;
         Object x = GetItem(cart, recentItemIndex);
         if (x instanceof Product) {
