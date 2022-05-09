@@ -22,21 +22,25 @@ public class GenericTutorial8 {
     public static void main(String[] args) {
 
         //Define products
-        Product eggLarge = new Egg("a001", 20);
-        Product eggSmall = new Egg("a002", 8);
-        Product pencilFullPack = new Pencil("a003", 12);
-        Product pencilKidPack = new Pencil("a004", 2);
+        Product egg1 = new Egg("a001", 20);
+        Product egg2 = new SmallEgg("a002", 8);
+        Product pencil1 = new Pencil("a003", 12);
+        Product pencil2 = new Pencil("a004", 2);
 
         //Define Cart that will be used for holding products.
         Cart<Product> cart = new Cart<>(3);
 
-        //Add products to the cart. Adding item to a collection or array type Generic class, use the super restriction. See AddMoreItems method for info.
-        AddMoreItems(cart, eggLarge);
-        AddMoreItems(cart, eggSmall);
-        AddMoreItems(cart, pencilFullPack);
-        AddMoreItems(cart, pencilKidPack); //if this product isn't added, then check capacity of Cart set on line8
+        //Add products to the cart. Method parameter uses the super keyword.
+        //If restricted generic class, then you can call method using type specified after super keyword or its parent (Object not accepted).
+        //If non-restricted generic class, then you can call method using type specified after super keyword or its parent (Object is accepted).
+        //For super - call with exact type specified after the super keyword or any of its parent.
+        AddMoreItems(cart, egg1);
+        AddMoreItems(cart, egg2);
+        AddMoreItems(cart, pencil1);
+        AddMoreItems(cart, pencil2); //if this product isn't added, then check capacity of Cart set on line8
 
-        //Get and Print serial number of last product added to cart. In a collection or array Generic class, use the extends/super keyword to get item.
+        //Get a product from cart by its index. Method parameter uses the extends keyword.
+        //For extends - call method with exact type specified after extends keyword or any of its children.
         int recentItemIndex = cart.GetTotalItemsInCart() - 1;
         Object x = GetItem(cart, recentItemIndex);
         if (x instanceof Product) {
@@ -46,20 +50,67 @@ public class GenericTutorial8 {
     }
 
     /** SUPER - For adding
-     * The super keyword for method parameter, creates a maximum class type that is allowed for defining the <? super ...> as method parameter.
-     * You cannot go higher than the restricted typed defined in the generic class.
-     * So if class is defined as <T extends Product>, then <? super ...> will only accept Product or its children for '...' argument
      *
-     * Note (When generic class is defined with restriction):
-     * - if your class is defined as <T extends Product>, then Java explicitly restricts the class as <T extends Product>.
-     * - Meaning you can use Product or its children in defining the super keyword.
-     * - So you can have <? super String>, <? super Product>, or <? super Egg> etc.
-     * - Please note, you cannot use anything higher than Product, for example you cannot have <? super Object> since Object is higher than Product.
+     * When Generic class is not restricted:
+     * >>Given class - Cart<T>
+     * >>Method definition: super can be followed by any type (i.e. String, Object, Product etc.) as shown below.
+     *      AddMoreItems(Cart<? super Object> activeCart)
+     *      AddMoreItems(Cart<? super Egg> activeCart)
+     *      AddMoreItems(Cart<? super Product> activeCart)
+     *      AddMoreItems(Cart<? super String> activeCart)
+     *      AddMoreItems(Cart<? super Number> activeCart)
+     * >>Calling method: You can use type defined after the super keyword or its parent. Note: you can use new Cart<Object> since generic class is not restricted.
+     *      If method is AddMoreItems(Cart<? super SmallEgg> activeCart), then call
+     *          AddMoreItems(new Cart<SmallEgg>())
+     *          AddMoreItems(new Cart<Egg>())
+     *          AddMoreItems(new Cart<Product>())
+     *          AddMoreItems(new Cart<Object>())
+     *      If method is AddMoreItems(Cart<? super Number> activeCart), then call
+     *          AddMoreItems(new Cart<Number>())
+     *          AddMoreItems(new Cart<Object>())
+     *      If method is AddMoreItems(Cart<? super Object> activeCart), then call
+     *          AddMoreItems(new Cart<Object>())
+     * >>Summary:
+     * For a non-restricted generic class <T>
+     * Create method: By specifying <? super anyType>. You can use any type including Object.
+     * Calling method: Supply as argument to the method the 'anyType' used after the super keyword or any of its Parent including Object. Object is allowed when it involves a non-generic class.
      *
-     * Note (When generic class has no restriction):
-     * - if your class is defined as <T>, then Java automatically restrict the class as <T extends Object>.
-     * - Meaning you can use Object or its children in defining the super keyword.
-     * - So you can have <? super Object>, <? super String>, <? super Product>, <? super Egg> etc.
+     *
+     *
+     * When Generic class is restricted:
+     * >>Given class - Cart<T extends Product>
+     * >>Method definition: super can be followed by Product or its children as shown below
+     *      AddMoreItems(Cart<? super Product> activeCart)
+     *      AddMoreItems(Cart<? super Egg> activeCart)
+     *      AddMoreItems(Cart<? super Pencil> activeCart)
+     * >>Calling method: You can use type defined after the super keyword or its parent. Note: new Cart<Object> should not be use.
+     *      If method is AddMoreItems(Cart<? super Product> activeCart), then call
+     *          AddMoreItems(new Cart<Product>())
+     *      If method is AddMoreItems(Cart<? super Egg> activeCart), then call
+     *          AddMoreItems(new Cart<Egg>())
+     *          AddMoreItems(new Cart<Product>())
+     *      If method is AddMoreItems(Cart<? super Pencil> activeCart), then call
+     *          AddMoreItems(new Cart<Pencil>())
+     *          AddMoreItems(new Cart<Product>())
+     *
+     * Summary:
+     * (if restricted generic class)
+     * Create method :
+     * Specify the exact restrictedType OR its children
+     * Call method:
+     * Supply at minimum the exact type mentioned after the super keyword or
+     * Supply at maximum any of its parent (i.e. parents of the type mentioned after the super keyword) as argument.
+     * But the parent type cannot be higher than the restrictedType used to define the generic class.
+     * Object is not allowed.
+     *
+     * (if non-restricted generic class)
+     * Create method:
+     * Specify anyType (i.e. String, Number, Object, Product etc.)
+     * Call method:
+     * Supply at minimum exact type mentioned after the super keyword or
+     * Supply at maximum any of its parent (i.e. parents of the type mentioned after the super keyword) as argument.
+     * Object is allowed.
+     *
      * @param activeCart
      * @param product
      */
@@ -72,28 +123,25 @@ public class GenericTutorial8 {
     }
 
     /** EXTENDS - For getting
-     * The extends keyword for method parameter does not mandate a maximum class type.
-     * You can go higher or lower than the restricted type defined in the generic class.
-     * So  if class is defined as <T extends Product>, then <? extends ...> will accept Object, Product or its children (i.e. Egg, Pencil) for '...' argument.
      *
-     * Note (When generic class is defined with restriction):
-     * - if your class is defined as <T extends Product>, then Java bounds your generic class to Product.
-     * - Unlike super, with extends, you can go higher (Product's parent) or lower (Product's children).
-     * - So you can have Cart<? extends Object/Product/Egg/Pencil> specified as the method's parameter when using extends based on a restricted generic class.
-     * - If you did Cart<? extends Object>, then the GetItemFromCart method will return T as Product, because generic class is restricted to Product. It doesn't return higher than Product.
-     * - Also, if you did Cart<? extends Product/Egg/Pencil>, then the GetItemFromCart method will return T as either Product/Egg/Pencil respectively.
+     * Summary:
+     * (if restricted generic class)
+     * Create method :
+     * Specify the exact restrictedType OR its children
+     * Call method:
+     * Supply the exact type mentioned in the created method, or its children (if any).
      *
-     * Note (When generic class has no restriction):
-     * - if your class is defined as <T>, then Java automatically restrict the class as <T extends Object>,
-     * - This mean the GetItemFromCart method will return a type based on what was specified in <? extends ...>
-     * - If you specified <? extends String>, then the GetItemFromCart method will return T as String.
-     * - If you specified <? extends Number>, then the GetItemFromCart method will return T as Number. etc
+     * (if non-restricted generic class)
+     * Create method:
+     * Specify anyType (i.e. String, Number, Object, Product etc.)
+     * Call method:
+     * Supply the exact type mentioned in the created method, or its children (if any)
      *
      * @param cart
      * @param index
      * @return
      */
-    static Object GetItem(Cart<? extends Object> cart, int index) {
+    static Object GetItem(Cart<? extends Product> cart, int index) {
         var x = cart.GetItemFromCart(index);
         return x;
     }
@@ -117,8 +165,8 @@ class Cart<T extends Product> {
         int highestIndex = this.capacity - 1;
 
         if (counter < this.capacity) {
-            isAdded = true;
             items[counter++] = item;
+            isAdded = true;
         }
         return isAdded;
     }
@@ -157,6 +205,12 @@ class Egg extends Product {
 
 class Pencil extends Product {
     Pencil(String serialNumber, int weight) {
+        super(serialNumber, weight);
+    }
+}
+
+class SmallEgg extends Egg {
+    SmallEgg(String serialNumber, int weight) {
         super(serialNumber, weight);
     }
 }
