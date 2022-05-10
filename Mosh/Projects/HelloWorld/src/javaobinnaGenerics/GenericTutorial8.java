@@ -29,66 +29,66 @@ public class GenericTutorial8 {
 
     /** SUPER - For adding
      *
-     * When Generic class is not restricted:
-     * >>Given class - Cart<T>
-     * >>Method definition: super can be followed by any type (i.e. String, Object, Product etc.) as shown below.
-     *      AddMoreItems(Cart<? super Object> activeCart)
-     *      AddMoreItems(Cart<? super Egg> activeCart)
-     *      AddMoreItems(Cart<? super Product> activeCart)
-     *      AddMoreItems(Cart<? super String> activeCart)
-     *      AddMoreItems(Cart<? super Number> activeCart)
-     * >>Calling method: You can use type defined after the super keyword or its parent. Note: you can use new Cart<Object> since generic class is not restricted.
-     *      If method is AddMoreItems(Cart<? super SmallEgg> activeCart), then call
-     *          AddMoreItems(new Cart<SmallEgg>())
-     *          AddMoreItems(new Cart<Egg>())
-     *          AddMoreItems(new Cart<Product>())
-     *          AddMoreItems(new Cart<Object>())
-     *      If method is AddMoreItems(Cart<? super Number> activeCart), then call
-     *          AddMoreItems(new Cart<Number>())
-     *          AddMoreItems(new Cart<Object>())
-     *      If method is AddMoreItems(Cart<? super Object> activeCart), then call
-     *          AddMoreItems(new Cart<Object>())
-     * >>Summary:
-     * For a non-restricted generic class <T>
-     * Create method: By specifying <? super anyType>. You can use any type including Object.
-     * Calling method: Supply as argument to the method the 'anyType' used after the super keyword or any of its Parent including Object. Object is allowed when it involves a non-generic class.
-     *
-     *
-     *
-     * When Generic class is restricted:
-     * >>Given class - Cart<T extends Product>
-     * >>Method definition: super can be followed by Product or its children as shown below
-     *      AddMoreItems(Cart<? super Product> activeCart)
-     *      AddMoreItems(Cart<? super Egg> activeCart)
-     *      AddMoreItems(Cart<? super Pencil> activeCart)
-     * >>Calling method: You can use type defined after the super keyword or its parent. Note: new Cart<Object> should not be use.
-     *      If method is AddMoreItems(Cart<? super Product> activeCart), then call
-     *          AddMoreItems(new Cart<Product>())
-     *      If method is AddMoreItems(Cart<? super Egg> activeCart), then call
-     *          AddMoreItems(new Cart<Egg>())
-     *          AddMoreItems(new Cart<Product>())
-     *      If method is AddMoreItems(Cart<? super Pencil> activeCart), then call
-     *          AddMoreItems(new Cart<Pencil>())
-     *          AddMoreItems(new Cart<Product>())
-     *
      * Summary:
      * (if restricted generic class)
      * Create method :
-     * Specify the exact restrictedType OR its children
+     *      Append after super keyword, the restrictedType (OR its children) that was used to define the generic class.
      * Call method:
-     * Supply at minimum the exact type mentioned after the super keyword or
-     * Supply at maximum any of its parent (i.e. parents of the type mentioned after the super keyword) as argument.
-     * But the parent type cannot be higher than the restrictedType used to define the generic class.
-     * Object is not allowed.
+     *      Supply at minimum the exact type that was used to create the method.
+     *      Supply at maximum the parent or at most the restrictedType that was used to define the generic class.
+     *      Example1:
+     *          Given class Gen<T>, java translates the non-restricted class as class Gen<T extends Object> where Object is the restrictedType.
+     *          Given method created: DoSomething(Gen<?> x) or DoSomething(Gen<? super Object> x) or DoSomething(Gen<? super SmallEgg> x) where SmallEgg < Egg < Product
+     *          Calling the method - DoSomething(Gen<? super SmallEgg> x):
+     *              at minimum (scenario1) >> DoSomething(new Gen<SmallEgg>()).
+     *              at maximum (scenario1) >> DoSomething(new Gen<Egg/Product/Object>()). Cannot exceed the restrictedType (i.e. Object) used to define the class.
+     *          Calling the method - DoSomething(Gen<? super Object> x):
+     *              at minimum (scenario2) >> DoSomething(new Gen<Object>()).
+     *              at maximum (scenario2) >> DoSomething(new Gen<Object>()). Cannot exceed the restrictedType used to define the class.
+     *      Example2:
+     *          Given class Gen<T extends Product>, where Product is the restrictedType.
+     *          Given method created: DoSomething(Gen<? super SmallEgg> x) where SmallEgg < Egg < Product
+     *          Calling the method - DoSomething(Gen<? super SmallEgg> x):
+     *              at minimum (scenario1) >> DoSomething(new Gen<SmallEgg>()).
+     *              at maximum (scenario1) >> DoSomething(new Gen<Egg/Product>()). Cannot exceed the restrictedType (i.e. Product) used to define the class.
+     *
      *
      * (if non-restricted generic class)
      * Create method:
-     * Specify anyType (i.e. String, Number, Object, Product etc.)
+     *      Append after super keyword, any type.
      * Call method:
-     * Supply at minimum exact type mentioned after the super keyword or
-     * Supply at maximum any of its parent (i.e. parents of the type mentioned after the super keyword) as argument.
-     * Object is allowed.
+     *      Supply at minimum exact type that was used to create the method.
+     *      Supply at maximum the parents of type used when creating the method, or at most the Object type which is interpreted as the restrictedType by Java.
+     *      Example1:
+     *          Given class Gen<T>, java translates the non-restricted class as class Gen<T extends Object> where Object is the restrictedType.
+     *          Given method created: DoSomething(Gen<?> x) or DoSomething(Gen<? extends Integer> x) or DoSomething(Gen<? extends SmallEgg> x)
+     *          Calling the method - DoSomething(Gen<?> x):
+     *              at minimum (scenario1) >> DoSomething(new Gen<anyType>()).
+     *              at maximum (scenario1) >> DoSomething(new Gen<Parent of anyType/Object>()). Cannot exceed the implied restrictedType (i.e. Object) used to define the class.
+     *          Calling the method - DoSomething(Gen<? super Integer> x):
+     *              at minimum (scenario2) >> DoSomething(new Gen<Integer>()).
+     *              at maximum (scenario2) >> DoSomething(new Gen<Parent of Integer/Object>()). Cannot exceed the implied restrictedType (i.e. Object) used to define the class.
+     *          Calling the method - DoSomething(Gen<? super SmallEgg> x):
+     *              at minimum (scenario3) >> DoSomething(new Gen<SmallEgg>()).
+     *              at maximum (scenario3) >> DoSomething(new Gen<Parents of SmallEgg/Object>()). Cannot exceed the implied restrictedType (i.e. Object) used to define the class.
      *
+     *
+     * Note (using super for both restricted and non-restricted class):
+     *      You may explicitly specify a restrictedType when you create the generic class.
+     *      If no restrictedType is specified, then Java implies Object as the restrictedType for the generic class.
+     *      For creating: The type to use must either be the restrictedType/implied-restrictedType or its children.
+     *      For Calling:
+     *          minimum type > must be at least the type used for creating the method
+     *          maximum type > must be any of the parent for type used in creating the method or at most the restrictedType/implied-restrictedType used to create the generic class.
+     *
+     *
+     * Note (Similarity between extends and super keyword):
+     *      For creating (almost similar):
+     *          Super, requires using either the restrictedType/implied-restricted/children.
+     *          Extends, requires using either the Object/restrictedType/implied-restricted/children.
+     *      For calling (vary):
+     *          Super aims upward, i.e. at minimum use same type that was specified when creating method. Or go higher by using any of its parent up to at most the restrictedType/implied-restrictedType at maximum.
+     *          Extend aims downward, i.e. at maximum use same type that was specified when creating method. Or go lower by using any of its children (and that includes any of the children of the restrictedType/implied-restrictedType).
      * @param activeCart
      * @param product
      */
@@ -105,16 +105,24 @@ public class GenericTutorial8 {
      * Summary:
      * (if restricted generic class)
      * Create method :
-     * Specify the exact restrictedType OR its children
+     *      Append after extends keyword, the Object type, the restrictedType (OR its children) that was used to define the generic class
      * Call method:
-     * Supply the exact type mentioned in the created method, or its children (if any).
+     *      Supply the exact type or its children that was used to create the method.
      *
      * (if non-restricted generic class)
      * Create method:
-     * Specify anyType (i.e. String, Number, Object, Product etc.)
+     *      Freely append any type after the extends keyword.
      * Call method:
-     * Supply the exact type mentioned in the created method, or its children (if any)
+     *      Supply the exact type or its children that was used to create the method.
      *
+     *
+     * Note (Similarity between extends and super keyword):
+     *      For creating (almost similar):
+     *          Super, requires using either the restrictedType/implied-restricted/children.
+     *          Extends, requires using either the Object/restrictedType/implied-restricted/children.
+     *      For calling (vary):
+     *          Super aims upward, i.e. at minimum use same type that was specified when creating method. Or go higher by using any of its parent up to at most the restrictedType/implied-restrictedType at maximum.
+     *          Extend aims downward, i.e. at maximum use same type that was specified when creating method. Or go lower by using any of its children (and that includes any of the children of the restrictedType/implied-restrictedType).
      * @param cart
      * @param index
      * @return
@@ -140,7 +148,6 @@ class Cart<T extends Product> {
 
     boolean AddItemToCart(T item) {
         boolean isAdded = false;
-        int highestIndex = this.capacity - 1;
 
         if (counter < this.capacity) {
             items[counter++] = item;
