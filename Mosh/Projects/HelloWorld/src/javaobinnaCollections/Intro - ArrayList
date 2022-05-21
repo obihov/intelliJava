@@ -1,0 +1,33 @@
+The Iterable interface along with its child interfaces and classes allow us to iterate through collections.
+
+In previous example (see javaobinnaGenerics package) we implemented a class called GenericList<T> where T represents any reference type (unless restricted).
+
+So if class was defined as below:
+public class GenericList<T>
+{
+    private T[] items = (T[]) new Object[10];
+    private int count;
+
+    public void Add(T item){
+        this.items[count++] = item;
+    }
+
+    public T Get(int index){
+        return this.items[index];
+    }
+}
+
+Now given above implementation of the GenericList<T> class, if we wanted to loop over this class using the foreach approach, to access each item contained in the items collection internally, it would be impossible because the GenericList class doesn't implement the Iterable or any of its member types (see intro.txt in this package).
+
+So we cannot do,
+GenericList<String> names = new GenericString<>();
+for(var name : names) { }
+//we cannot iterate over an instance of a type that doesn't implement the iterable interface or its member types.
+
+NOTE:
+Although a bad practice, a simple workaround will be to expose the private member "items" in the GenericList<T> class and make it public. This way you can iterate using the items field, because the type for the items field is an Array type, which Java has already implemented the iterable interface on it. But exposing your private field will violate the Encapsulation (data hiding / abstraction or interface) aspect of Abstraction (inheritance concept), Encapsulation, Inheritance, Polymorphism principles.
+
+So if items was made public, then you can do the below.
+for(var name : names.items) { }
+
+To prevent having to do this, your GenericList<T> class or any class you want to iterate over should implement the iterable interface as you will see throughout the example contained in this package.

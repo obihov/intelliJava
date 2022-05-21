@@ -1,0 +1,24 @@
+You can not instantiate an abstract class.
+
+However, you can create an array object off an abstract class.
+Just keep in mind that for each item, it has to be subclass of the abstract class.
+
+So you have
+abstract class Student{ }
+class GradStudent extends Student { }
+
+You cannot instantiate Student since it's abstract so below wont work
+Student student = new Student();
+
+But you can create an array of Student even if it's abstract. Can do the same with interfaces as well.
+Student[] students = new Student[2];
+
+If you noticed, arrays are recognizable through its square brackets and not the round brackets used in
+instantiating a class.
+
+To add item to the abstract student array object, you must use a subclass of the abstract class that is
+in itself instantiable. So,
+students[0] = new GradStudent()
+
+This is like saying,
+Student student = new GradStudent();
