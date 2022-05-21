@@ -1,0 +1,19 @@
+The Java Iterable interface is used for handling collection objects.
+
+Hierarchy of the Iterable interface.
+
+Iterable***
+    -Collection***
+         -List***
+            -ArrayList+
+            -LinkedList+
+         -Queue***
+            -PriorityQueue+
+         -Set***
+            -HashSet+
+
+Legend
+*** : Interface
++ : Class
+
+Classes are: ArrayList, LinkedList, PriorityQueue, and HashSet

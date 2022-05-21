@@ -64,7 +64,7 @@ public class GenericTutorial8 {
      *          Given method created: DoSomething(Gen<?> x) or DoSomething(Gen<? extends Integer> x) or DoSomething(Gen<? extends SmallEgg> x)
      *          Calling the method - DoSomething(Gen<?> x):
      *              at minimum (scenario1) >> DoSomething(new Gen<anyType>()).
-     *              at maximum (scenario1) >> DoSomething(new Gen<Parent of anyType/Object>()). Cannot exceed the implied restrictedType (i.e. Object) used to define the class.
+     *              at maximum (scenario1) >> DoSomething(new Gen<Parent for anyType/Object>()). Cannot exceed the implied restrictedType (i.e. Object) used to define the class.
      *          Calling the method - DoSomething(Gen<? super Integer> x):
      *              at minimum (scenario2) >> DoSomething(new Gen<Integer>()).
      *              at maximum (scenario2) >> DoSomething(new Gen<Parent of Integer/Object>()). Cannot exceed the implied restrictedType (i.e. Object) used to define the class.
