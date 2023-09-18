@@ -40,4 +40,5 @@ About List interface
     Also, since the List interface implements the Collection, it means it will be able to do everything that the Collection interface and Iterable interface can do.
     So you can use a foreach or iterator object to loop through the collection (Thanks to Iterable interface)
     You can also add, remove, get size of the collection (Thanks to Collection interface)
-
+    
+    
