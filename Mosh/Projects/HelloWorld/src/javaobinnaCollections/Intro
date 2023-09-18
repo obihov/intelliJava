@@ -17,3 +17,27 @@ Legend
 + : Class
 
 Classes are: ArrayList, LinkedList, PriorityQueue, and HashSet
+
+About Iterable interface.
+    We care about providing foreach looping functionality for Generic classes built with arrays/collection internally.
+    Generic class must implement the Iterable interface and provide implementation for the iterator method that returns the iterator object.
+    Iterator object is needed for performing foreach looping.
+    Foreach looping can be achieved using a while-loop(genericObject.hasNext()) and genericObject.next() to retrieve item in current index location.
+    It can also be achieved using just for(var item in genericObject) simply.
+
+
+About Collection interface
+    This interface is only interested in adding and removing items in a collection object.
+    Since it implements the Iterable interface, it means foreach loop can be used to iterate the collection object.
+    Avoid creating a class that implements the Collection interface, because you will have to implement several required methods (those defined in the Iterable interface as well as those defined in the Collection interface).
+    Rather, use the Collection interface and any of its implementing classes such as ArrayList, PriorityQueue, HashSet etc. to create an instance of a collection object.
+    You can loop the collectionObject using foreach loop, or simply use an iterator object in a while-loop to achieve same result.
+    To get iterator do, "return Arrays.stream(collectionObject).iterator()"
+
+About List interface
+    This interface is interested in using index to access item in a collection.
+    If you care about the index or position of items in an ordered collection, then use the List interface.
+    Also, since the List interface implements the Collection, it means it will be able to do everything that the Collection interface and Iterable interface can do.
+    So you can use a foreach or iterator object to loop through the collection (Thanks to Iterable interface)
+    You can also add, remove, get size of the collection (Thanks to Collection interface)
+
